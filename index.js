@@ -53,9 +53,18 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
+    // categoryBooks api
+    app.get('/addedbooks/category/:category', async (req, res) => {
+      const category = req.params.category;
+      const query =  {category:category}
+      const cursor = bookcategoryCollections.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
     // update book api
-    app.get('/addedbooks/:id', async (req, res) => {
+    app.get('/addedbooks/update/:id', async (req, res) => {
       const id = req.params.id;
+      console.log(id)
       const query = { _id: new ObjectId(id) };
       const result = await bookcategoryCollections.findOne(query);
       res.send(result);
@@ -63,6 +72,7 @@ async function run() {
 
     app.put('/addedbooks/:id', async (req, res) => {
       const id = req.params.id;
+      console.log(id)
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
       const updateBook = req.body
@@ -82,12 +92,12 @@ async function run() {
     })
     // testing the server
     app.get('/', (req, res) => {
-      res.send('car doctor is running')
+      res.send('library management server is running')
     })
 
 
     app.listen(port, () => {
-      console.log(`car doctor is running on port ${port}`)
+      console.log(`library management server is running on port ${port}`)
     })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
