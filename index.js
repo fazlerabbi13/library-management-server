@@ -61,6 +61,13 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
+    // book details api
+    app.get('/addedbooks/bookdetails/:bookName', async (req, res) => {
+      const bookName = req.params.bookName;
+      const query =  {bookName:bookName}
+      const result = await bookcategoryCollections.findOne(query);
+      res.send(result);
+    })
     // update book api
     app.get('/addedbooks/update/:id', async (req, res) => {
       const id = req.params.id;
