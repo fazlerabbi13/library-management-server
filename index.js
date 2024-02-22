@@ -49,8 +49,19 @@ async function run() {
     })
     //  added all books for geeting api
     app.get('/addedbooks', async (req, res) => {
+      
       const cursor = bookcategoryCollections.find();
       const result = await cursor.toArray();
+      res.send(result);
+    })
+    // paigination api
+    app.get('/addedbooks', async (req, res) => {
+      
+      const page =parseInt(req.query.page)
+      const limit = parseInt(req.query.limit)
+
+      const cursor = bookcategoryCollections.find();
+      const result = await cursor.skip(page * limit).limit(limit).toArray();
       res.send(result);
     })
     // categoryBooks api
@@ -97,6 +108,16 @@ async function run() {
       const result = await bookcategoryCollections.updateOne(filter, product, options)
       res.send(result)
     })
+
+    // paigination api
+
+    app.get('/bookcount' , async(req,res) =>{
+
+      const total = await bookcategoryCollections.estimatedDocumentCount();
+      res.send({total});
+
+    })
+
     // testing the server
     app.get('/', (req, res) => {
       res.send('library management server is running')
