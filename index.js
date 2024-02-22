@@ -47,14 +47,8 @@ async function run() {
       const result = await bookcategoryCollections.insertOne(newBook);
       res.send(result);
     })
-    //  added all books for geeting api
-    app.get('/addedbooks', async (req, res) => {
-      
-      const cursor = bookcategoryCollections.find();
-      const result = await cursor.toArray();
-      res.send(result);
-    })
-    // paigination api
+   
+    // getting all data and paigination api
     app.get('/addedbooks', async (req, res) => {
       
       const page =parseInt(req.query.page)
