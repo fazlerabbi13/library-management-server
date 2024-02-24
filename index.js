@@ -51,11 +51,17 @@ async function run() {
     // getting all data and paigination api
     app.get('/addedbooks', async (req, res) => {
       
-      const page =parseInt(req.query.page)
-      const limit = parseInt(req.query.limit)
+      // filter
+      const queryObj = {};
+      const category = req.query.category;
 
-      const cursor = bookcategoryCollections.find();
-      const result = await cursor.skip(page * limit).limit(limit).toArray();
+      if(category){
+        queryObj.category = category;
+      }
+      
+
+      const cursor = bookcategoryCollections.find(queryObj);
+      const result = await cursor.toArray();  
       res.send(result);
     })
     // categoryBooks api
@@ -103,7 +109,7 @@ async function run() {
       res.send(result)
     })
 
-    // paigination api
+    // paigination testenig data api
 
     app.get('/bookcount' , async(req,res) =>{
 
