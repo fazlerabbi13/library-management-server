@@ -32,6 +32,7 @@ async function run() {
     // DB Collections
     const bookcategoryCollections = client.db('BookHub').collection('AllCategoryBooks');
     const bookcategoryCollection = client.db('BookHub').collection('BookCategory');
+    const borrowedBooks = client.db('BookHub').collection('BorrowedBooks');
 
     // book category api
 
@@ -47,27 +48,38 @@ async function run() {
       const result = await bookcategoryCollections.insertOne(newBook);
       res.send(result);
     })
-   
+    //  borrowed book api
+    app.post('/borrowedbooks', async(req, res) =>{
+      const borrowedBook = req.body;
+      const result = await borrowedBooks.insertOne(borrowedBook);
+      res.send(result)
+    })
+
+    app.get('/borrowedbooks', async (req, res) => {
+      const cursor = borrowedBooks.find();
+      const result = await cursor.toArray()
+      res.send(result)
+    })
     // getting all data and paigination api
     app.get('/addedbooks', async (req, res) => {
-      
+
       // filter
       const queryObj = {};
       const category = req.query.category;
 
-      if(category){
+      if (category) {
         queryObj.category = category;
       }
-      
+
 
       const cursor = bookcategoryCollections.find(queryObj);
-      const result = await cursor.toArray();  
+      const result = await cursor.toArray();
       res.send(result);
     })
     // categoryBooks api
     app.get('/addedbooks/category/:category', async (req, res) => {
       const category = req.params.category;
-      const query =  {category:category}
+      const query = { category: category }
       const cursor = bookcategoryCollections.find(query);
       const result = await cursor.toArray();
       res.send(result);
@@ -75,7 +87,7 @@ async function run() {
     // book details api
     app.get('/addedbooks/bookdetails/:bookName', async (req, res) => {
       const bookName = req.params.bookName;
-      const query =  {bookName:bookName}
+      const query = { bookName: bookName }
       const result = await bookcategoryCollections.findOne(query);
       res.send(result);
     })
@@ -111,11 +123,18 @@ async function run() {
 
     // paigination testenig data api
 
-    app.get('/bookcount' , async(req,res) =>{
+    app.get('/bookcount', async (req, res) => {
 
       const total = await bookcategoryCollections.estimatedDocumentCount();
-      res.send({total});
+      res.send({ total });
 
+    })
+    // return book
+    app.delete('/borrowedbooks/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await borrowedBooks.deleteOne(query);
+      res.send(result);
     })
 
     // testing the server
