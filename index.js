@@ -10,7 +10,7 @@ require('dotenv').config()
 // midleware
 
 app.use(cors({
-  origin: ['http://localhost:5173'],
+  origin: ['https://bookhub-e9f73.web.app'],
   credentials: true
 }));
 app.use(express.json());
@@ -64,7 +64,7 @@ const verifyToken = (req, res, next) => {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+     client.connect();
     // DB Collections
     const bookcategoryCollections = client.db('BookHub').collection('AllCategoryBooks');
     const bookcategoryCollection = client.db('BookHub').collection('BookCategory');
@@ -101,8 +101,8 @@ async function run() {
       res
         .cookie("token", token, {
           httpOnly: true,
-          secure: process.env.ACCESS_TOKEN_SECRET === "production",
-          sameSite: process.env.ACCESS_TOKEN_SECRET === "production" ? "none" : "strict",
+          secure: true,
+          sameSite: 'none',
         })
         .send({ success: true });
     });
@@ -110,8 +110,8 @@ async function run() {
       res
         .clearCookie("token", {
           maxAge: 0,
-          secure: process.env.ACCESS_TOKEN_SECRET === "production" ? true : false,
-          sameSite: process.env.ACCESS_TOKEN_SECRET === "production" ? "none" : "strict",
+          secure: true,
+          sameSite:'none',
         })
         .send({ status: true });
     });
@@ -241,7 +241,7 @@ async function run() {
       console.log(`library management server is running on port ${port}`)
     })
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
